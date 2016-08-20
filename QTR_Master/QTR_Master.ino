@@ -38,10 +38,11 @@ void get_data_from_slave() {
   //      j = Wire.read();
   //    }
   //    int integer = word(i, j);
-  for (int i = 0; i < 16; i++) {
-    calibrationValues[i] = Wire.read();  //alternatively:  Serial.println(word(i,j));
-    Serial.println(calibrationValues[i]);
+  for (int i = 0; i < 16; i +=2) {
+    byte k = Wire.read();
+    byte y = Wire.read();
+    Serial.println(word(k,y));
   }
-  
+
 }
 

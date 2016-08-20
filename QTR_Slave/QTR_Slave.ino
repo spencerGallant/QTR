@@ -9,7 +9,8 @@
 
 char master_command = '0'; //commands recieved by nano from mega
 int data = 1023;
-byte calibrationValues[16] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+int sampleData[8] = {300, 301, 302, 303, 304, 305, 306, 307};
+byte calibrationValues[16];
 boolean calibrated = false; //Indicates weather QTR are calibrated
 
 QTRSensorsAnalog qtra((unsigned char[]) {
@@ -65,17 +66,13 @@ void calibrateQTR() {
 }
 
 void returnCalibrationVal() {
-  //  byte y = 0;
-  //  for (int x = 0; x < NUM_SENSORS; x++) {
-  //    integer[y] = highByte(qtra.calibratedMinimumOn[x]);
-  //    integer[y++] = lowByte(qtra.calibratedMinimumOn[x]);
-  //    y++;
-  //  }
+  int y = 0;
+  for (int x = 0; x < 16; x += 2) {
+    calibrationValues[x] = highByte(sampleData[y]);
+    calibrationValues[x + 1] = lowByte(sampleData[y]);
+    y++;
+  }
   Wire.write(calibrationValues, 16);
-  //  for (int x = 0; x < NUM_SENSORS; x++) {
-  //    integer[0] = highByte(qtra.calibratedMaximumOn[x]);
-  //    integer[1] = lowByte(qtra.calibratedMaximumOn[x]);
-  //    Wire.write(integer, 2);
 }
 
 
