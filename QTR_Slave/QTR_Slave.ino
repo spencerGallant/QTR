@@ -60,16 +60,22 @@ void sendData() {
 void calibrateQTR() {
   digitalWrite(6, HIGH);    // turn on Arduino's LED to indicate we are in calibration mode
   for (int i = 0; i < 500; i++) { // make the calibration take about 10 seconds
-   // qtra.calibrate();       // reads all sensors 10 times at 2.5 ms per six sensors (i.e. ~25 ms per call)
+    qtra.calibrate();       // reads all sensors 10 times at 2.5 ms per six sensors (i.e. ~25 ms per call)
   }
   digitalWrite(6, LOW);     // turn off Arduino's LED to indicate we are through
 }
 
 void returnCalibrationVal() {
   int y = 0;
-  for (int x = 0; x < 16; x += 2) {
-    calibrationValues[x] = highByte(sampleData[y]);
-    calibrationValues[x + 1] = lowByte(sampleData[y]);
+  for (int x = 0; x < 8; x += 2) {
+    calibrationValues[x] = highByte(qtra.calibratedMaximumOn[y]);
+    calibrationValues[x + 1] = lowByte(qtra.calibratedMaximumOn[y]);
+    y++;
+  }
+  y = 0;
+  for (int x = 8; x < 16; x += 2) {
+    calibrationValues[x] = highByte(qtra.calibratedMinimumOn[y]);
+    calibrationValues[x + 1] = lowByte(qtra.calibratedMinimumOn[y]);
     y++;
   }
   Wire.write(calibrationValues, 16);
